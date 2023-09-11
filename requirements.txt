@@ -6,3 +6,7 @@ fastapi
 sqlalchemy
 uvicorn
 black
+pytest
+httpx
+poetry
+setuptools

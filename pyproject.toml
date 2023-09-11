@@ -1,0 +1,32 @@
+[tool.poetry]
+name = "fastapi-rp"
+version = "0.1.0"
+description = "здесь будет какое-то описание моего проекта"
+authors = ["John Smith <john@example.com>"]
+license = "none"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+aiosqlite = "^0.19.0"
+alembic = "^1.12.0"
+python = "^3.11"
+fastapi = "^0.103.1"
+uvicorn = "^0.23.2"
+sqlalchemy = "^2.0.20"
+pydantic = "^2.3.0"
+pydantic-settings = "^2.0.3"
+
+
+[tool.poetry.group.test.dependencies]
+pytest = "^7.4.2"
+httpx = "^0.24.1"
+mypy = "^1.5.1"
+pylint = "^2.17.5"
+
+
+[tool.poetry.group.format_code.dependencies]
+black = "^23.9.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
