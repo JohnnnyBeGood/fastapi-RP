@@ -26,7 +26,7 @@ class DepartmentService:
         return result
 
     async def create_new_item(self, data: DepartmentCreate):
-        print("_+_+_+_+_+_+_+_+_+_+_+_")
+        # print("_+_+_+_+_+_+_+_+_+_+_+_")
         depart_create = data.model_dump()
         qq = await self._repository.create_new(depart_create)  # type: ignore
 
