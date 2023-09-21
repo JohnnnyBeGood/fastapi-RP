@@ -1,0 +1,43 @@
+{% extends "shared/base.html" %}
+
+{% block title %}
+<title>Список всех отделений</title>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1 class="display-7 text-center mb-3">Список всех Отделений</h1>
+        </div>
+        <div id="result" class="text-danger text-bold lead"></div>
+    </div>
+
+    <div class="row">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">N п/п</th>
+                    <th scope="col">Название</th>
+                    <th scope="col">код сортировки</th>
+                    <th scope="col">действие</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for division in divisions %}
+                <tr>
+                    <th scope="row">{{loop.index}}</th>
+                    <td>{{division.name}}</td>
+                    <td>{{division.sort_order}}</td>
+                    <td><button id={{division.id}} class="btn btn-info btn-sm"
+                            onclick="document.location='edit-division/{{division.id}}'">Edit</button></td>
+                    <td><button id={{division.id}} class="btn btn-danger btn-sm"
+                            onclick="document.location='delete-division/{{division.id}}'">Delete</button></td>
+                    <!-- " document.location='page/new.html'" -->
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

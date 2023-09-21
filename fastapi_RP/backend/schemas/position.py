@@ -18,7 +18,7 @@ class PositionCreate(PositionBase):
     is_archive: bool
 
 
-class PositionInDB(PositionBase):
+class PositionInDB(IDModelMixin, PositionBase):
     model_config = ConfigDict(from_attributes=True)
 
     name: str

@@ -1,0 +1,32 @@
+{% extends "shared/base.html" %}
+
+{% block title %}
+<title>Создание нового отделения</title>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="text-danger font-weight-bold">
+            {% for error in errors %}
+            <li>{{error}}</li>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="row my-5">
+        <h3 class="text-center display-4">Создание нового Отделения</h3>
+        <form method="POST">
+            <div class="mb-3">
+                <input type="text" required class="form-control" name="name" value="{{name}}"
+                    placeholder="Название отделения здесь">
+            </div>
+            <div class="mb-3">
+                <input type="text" required placeholder="код сортировки (число)" name="sort_order"
+                    value="{{sort_order}}" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

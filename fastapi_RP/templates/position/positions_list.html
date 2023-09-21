@@ -1,0 +1,51 @@
+{% extends "shared/base.html" %}
+
+{% block title %}
+<title>Список всех должностей</title>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1 class="display-7 text-center mb-3">Список всех доступных должностей</h1>
+        </div>
+        <div id="result" class="text-danger text-bold lead"></div>
+    </div>
+
+    <div class="row">
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th scope="col">N п/п</th>
+                    <th scope="col">Название</th>
+                    <th scope="col">Количество</th>
+                    <th scope="col">код сортировки</th>
+                    <th scope="col">статус</th>
+                    <th scope="col">действие</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for position in positions %}
+                <tr {% if position.is_archive %} class="table-success" {% else %} class="table-danger" {% endif %}>
+                    <th scope="row">{{loop.index}}</th>
+                    <td>{{position.name}}</td>
+                    <td>{{position.count_position}}</td>
+                    <td>{{position.sort_order}}</td>
+                    <td>{% if position.is_archive %}
+                        активная
+                        {% else %}
+                        устаревшая
+                        {% endif %}</td>
+                    <td><button id={{position.id}} class="btn btn-info btn-sm"
+                            onclick="document.location='edit-position/{{position.id}}'">Edit</button></td>
+                    <td><button id={{position.id}} class="btn btn-danger btn-sm"
+                            onclick="document.location='delete-position/{{position.id}}'">Delete</button></td>
+                    <!-- " document.location='page/new.html'" -->
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
