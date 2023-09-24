@@ -1,0 +1,84 @@
+{% extends "shared/base.html" %}
+
+{% block title %}
+<title>Создание новой записи в штатном расписании</title>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="text-danger font-weight-bold">
+            {% for error in errors %}
+            <li>{{error}}</li>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="row my-5">
+        <h3 class="text-center display-4">Создание новой записи в штатном расписании</h3>
+        <form method="POST">
+            <div class="mb-3">
+                <label class="form-check-label" for="select1" id="lbl_status">выбрать отдел</label>
+                <select name="select1" class="form-control">
+                    <option value="">--Please choose an option--</option>
+                    {% for item in depart %}
+                    <option name='{{item.name}}' value="{{item.id}}">
+                        {{item.name}}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-check-label" for="select1" id="lbl_status">выбрать отделение</label>
+                <select name="select1" class="form-control">
+                    <option value="">--Please choose an option--</option>
+                    {% for item in division %}
+                    <option name='{{item.name}}' equired placeholder="выберете должность" value="{{item.id}}">
+                        {{item.name}}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-check-label" for="select1" id="lbl_status">выбрать должность</label>
+                <select name="select1" class="form-control">
+                    <option value="">--Please choose an option--</option>
+                    {% for item in position %}
+                    <option name='{{item.name}}' equired placeholder="выберете должность" value="{{item.id}}">
+                        {{item.name}}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" name="is_archive"
+                    value="FALSE" onclick="myFunc()" />
+                <label class="form-check-label" for="flexSwitchCheckChecked" id="lbl_status">архивная должность</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function myFunc() {
+
+        const chbox = document.getElementById("flexSwitchCheckChecked");
+        const lbl_status = document.getElementById("lbl_status");
+        // window.alert("44444");
+        chbox.addEventListener('change', function () {
+            // window.alert("chbox.checked");
+            if (!chbox.checked) {
+                chbox.value = "FALSE";
+                lbl_status.textContent = "архивная должность";
+                // window.alert(chbox.value);
+            }
+            else {
+                chbox.value = "TRUE";
+                lbl_status.textContent = "действующая должность";
+            }
+        }, { once: true });
+    };
+</script>
+
+{% endblock %}

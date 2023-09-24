@@ -1,0 +1,48 @@
+{% extends "shared/base.html" %}
+
+{% block title %}
+<title>Штатное расписание</title>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1 class="display-7 text-center mb-3">Штатное расписание</h1>
+        </div>
+        <div id="result" class="text-danger text-bold lead"></div>
+    </div>
+
+    <div class="row">
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th scope="col">N п/п</th>
+                    <th scope="col">Отдел</th>
+                    <th scope="col">Отделение</th>
+                    <th scope="col">Должность</th>
+                    <th scope="col">статус</th>
+                    <th scope="col">действие</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in full_staff_schedule %}
+                <tr>
+                    <th scope="row">{{loop.index}}</th>
+                    <td>{{item.depart}}</td>
+                    <td>{{item.division}}</td>
+                    <td>{{item.position}}</td>
+                    <td>{% if item.is_vacancy %} свободна {% else %} занята {% endif %}</td>
+                    <td>{% if item.is_archival %} архивная {% else %} действующая {% endif %}</td>
+                    <td><button id={{item.id}} class="btn btn-info btn-sm"
+                            onclick="document.location='edit-position/{{item.id}}'">Edit</button></td>
+                    <td><button id={{item.id}} class="btn btn-danger btn-sm"
+                            onclick="document.location='delete-position/{{item.id}}'">Delete</button></td>
+                    <!-- " document.location='page/new.html'" -->
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

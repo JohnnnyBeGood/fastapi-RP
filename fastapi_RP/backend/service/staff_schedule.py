@@ -1,4 +1,5 @@
 from fastapi_RP.backend.utils.abstract_repository import AbstractRepository
+from fastapi_RP.backend.utils.sql_repository import SQLStaffSchedule
 from fastapi_RP.backend.schemas.staff_schedule import StaffScheduleCreate
 from fastapi_RP.backend.schemas.staff_schedule import StaffScheduleUpdate
 
@@ -25,4 +26,13 @@ class StaffScheduleService:
         # print("_+_+_+_+_+_+_+_+_+_+_+_")
         staff_create = data.model_dump()
         result = await self._repository.create_new(staff_create)  # type: ignore
+        return result
+
+
+class StaffScheduleServiceMixin:
+    def __init__(self, repository: SQLStaffSchedule):
+        self._repository: SQLStaffSchedule = repository()  # type: ignore
+
+    async def get_all_items(self, raw_sql):
+        result = await self._repository.get_all_items(raw_sql=raw_sql)  # type: ignore
         return result

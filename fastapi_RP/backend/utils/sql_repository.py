@@ -44,3 +44,13 @@ class SQLAbstractRepository(AbstractRepository):
         result = await _session.execute(stmt)
         await _session.commit()
         return {"success"}
+
+
+class SQLStaffSchedule:
+    async def get_all_items(self, raw_sql):
+        _session = await anext(get_db())  # type: ignore
+
+        result = await _session.execute(raw_sql)
+        await _session.commit()
+        rez = result.fetchall()
+        return rez
