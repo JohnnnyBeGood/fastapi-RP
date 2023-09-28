@@ -21,6 +21,7 @@
                     <th scope="col">Отдел</th>
                     <th scope="col">Отделение</th>
                     <th scope="col">Должность</th>
+                    <th scope="col">Коментарий</th>
                     <th scope="col">статус</th>
                     <th scope="col">действие</th>
                 </tr>
@@ -32,10 +33,11 @@
                     <td>{{item.depart}}</td>
                     <td>{{item.division}}</td>
                     <td>{{item.position}}</td>
+                    <td>{{item.comment}}</td>
                     <td>{% if item.is_vacancy %} свободна {% else %} занята {% endif %}</td>
                     <td>{% if item.is_archival %} архивная {% else %} действующая {% endif %}</td>
                     <td><button id={{item.id}} class="btn btn-info btn-sm"
-                            onclick="document.location='edit-position/{{item.id}}'">Edit</button></td>
+                            onclick="document.location='edit-staff-record/{{item.id}}'">Edit</button></td>
                     <td><button id={{item.id}} class="btn btn-danger btn-sm"
                             onclick="document.location='delete-position/{{item.id}}'">Delete</button></td>
                     <!-- " document.location='page/new.html'" -->

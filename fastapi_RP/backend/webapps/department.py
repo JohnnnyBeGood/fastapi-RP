@@ -27,11 +27,11 @@ router = APIRouter(include_in_schema=True)
 CommonsDep = Annotated[DepartmentService, Depends(department_service)]  # type: ignore
 
 
-@router.get("/", response_class=responses.HTMLResponse)
-async def home(request: Request):  # , db: Session = Depends(get_db), msg: str = None):
-    return fastapi_RP.backend.webapps.templates.TemplateResponse(
-        "general_pages/homepage.html", {"request": request}
-    )
+# @router.get("/", response_class=responses.HTMLResponse)
+# async def home(request: Request):  # , db: Session = Depends(get_db), msg: str = None):
+#     return fastapi_RP.backend.webapps.templates.TemplateResponse(
+#         "general_pages/homepage.html", {"request": request}
+#     )
 
 
 @router.get("/all-departs", response_class=responses.HTMLResponse)

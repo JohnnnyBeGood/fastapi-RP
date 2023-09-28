@@ -41,23 +41,32 @@ CommonsDep_depart = Annotated[DepartmentService, Depends(department_service)]
 CommonsDep_divis = Annotated[DivisionService, Depends(division_service)]
 CommonsDep_posit = Annotated[PositionService, Depends(position_service)]
 
-# @router.get("/", response_class=responses.HTMLResponse)
-# async def home(request: Request):  # , db: Session = Depends(get_db), msg: str = None):
-#     return fastapi_RP.backend.webapps.templates.TemplateResponse(
-#         "general_pages/homepage.html", {"request": request}
-#     )
-
 
 RAW_SQL = text(
-    """SELECT tblStaffSchedule.id, tblDepartment.id, tblDepartment.name as depart, 
-        tblDivision.id, tblDivision.name as division, tblPosition.id, tblPosition.name as position,
-        tblStaffSchedule.is_vacancy as is_vacancy, tblStaffSchedule.is_archival as is_archival
+    """SELECT tblStaffSchedule.id as id, tblDepartment.id as depart_id, tblDepartment.name as depart, 
+        tblDivision.id as division_id, tblDivision.name as division, tblPosition.id as position_id, tblPosition.name as position,
+        tblStaffSchedule.is_vacancy as is_vacancy, tblStaffSchedule.is_archival as is_archival,
+        tblStaffSchedule.comment as comment
         from tblStaffSchedule, tblDepartment, tblDivision, tblPosition 
         WHERE tblDepartment.id=tblStaffSchedule.department_id and tblDivision.id=tblStaffSchedule.division_id and tblPosition.id=tblStaffSchedule.position_id
         ORDER by tblDepartment.id, tblDivision.id ASC"""
 )
 
-from fastapi_RP.backend.core.session import get_db
+
+async def get_context():
+    dep_service = department_service()
+    div_service = division_service()
+    pos_service = position_service()
+    departs = await dep_service.get_all_item()
+    division = await div_service.get_all_item()
+    position = await pos_service.get_all_item()
+    context = {
+        "request": None,
+        "depart": departs,
+        "division": division,
+        "position": position,
+    }
+    return context
 
 
 @router.get("/full-staff-schedule", response_class=responses.HTMLResponse)
@@ -65,8 +74,6 @@ async def get_all_staff_records(
     request: Request, staff_schedule_service_mixin: CommonsDepMixin
 ):
     full_staff_schedule = await staff_schedule_service_mixin.get_all_items(RAW_SQL)
-    # staff_schedule = await staff_schedule_service.get_all_item()
-
     return fastapi_RP.backend.webapps.templates.TemplateResponse(
         "staff_schedule/staff_schedule_list.html",
         {"request": request, "full_staff_schedule": full_staff_schedule},
@@ -74,21 +81,9 @@ async def get_all_staff_records(
 
 
 @router.get("/create-a-staff-record", response_class=responses.HTMLResponse)
-async def create_staffschedule_init(
-    request: Request,
-    depart_service: CommonsDep_depart,
-    division_service: CommonsDep_divis,
-    position_service: CommonsDep_posit,
-):
-    departs = await depart_service.get_all_item()
-    division = await division_service.get_all_item()
-    position = await position_service.get_all_item()
-    context = {
-        "request": request,
-        "depart": departs,
-        "division": division,
-        "position": position,
-    }
+async def create_staffschedule_init(request: Request):
+    context = await get_context()
+    context["request"] = request
     return fastapi_RP.backend.webapps.templates.TemplateResponse(
         "staff_schedule/create_staff_record.html", context=context
     )
@@ -98,25 +93,25 @@ async def create_staffschedule_init(
 async def create_staffschedule_submit(
     request: Request, staff_schedule_service: CommonsDep
 ):
-    # form = StaffScheduleCreateForm(request)
-    # await form.load_data()
+    form = StaffScheduleCreateForm(request)
+    await form.load_data()
 
-    # if form.is_valid():
-    #     try:
-    #         # token = request.cookies.get("access_token")
-    #         # scheme, param = get_authorization_scheme_param(
-    #         #     token
-    #         # )  # scheme will hold "Bearer" and param will hold actual token value
-    #         # current_user: User = get_current_user_from_token(token=param, db=db)
-    #         data = StaffScheduleCreate(**form.__dict__)
-    #         staff_record = await staff_schedule_service.create_new_item(
-    #             data=data
-    #         )  # create_new_job(job=job, db=db, owner_id=current_user.id)
-    #         # return responses.RedirectResponse(
-    #         #     f"/details/{job.id}", status_code=status.HTTP_302_FOUND
-    #         # )
-    #     except Exception as e:
-    #         print(e)
+    if form.is_valid():
+        try:
+            #         # token = request.cookies.get("access_token")
+            #         # scheme, param = get_authorization_scheme_param(
+            #         #     token
+            #         # )  # scheme will hold "Bearer" and param will hold actual token value
+            #         # current_user: User = get_current_user_from_token(token=param, db=db)
+            data = StaffScheduleCreate(**form.__dict__)
+            staff_record = await staff_schedule_service.create_new_item(
+                data=data
+            )  # create_new_job(job=job, db=db, owner_id=current_user.id)
+        #         # return responses.RedirectResponse(
+        #         #     f"/details/{job.id}", status_code=status.HTTP_302_FOUND
+        #         # )
+        except Exception as e:
+            print(e)
     #         form.__dict__.get("errors").append(
     #             "You might not be logged in, In case problem persists please contact us."
     #         )
@@ -140,11 +135,12 @@ async def create_staffschedule_submit(
 async def edit_staffschedule_init(
     request: Request, id: int, staff_schedule_service: CommonsDep
 ):
+    context = await get_context()
+    context["request"] = request
     staff_record = await staff_schedule_service.get_item_by_id(id=id)
-    sel_my = [43, 76, 978, 234, 556]
+    context["staff_record"] = staff_record
     return fastapi_RP.backend.webapps.templates.TemplateResponse(
-        "staff_schedule/edit_staff_record.html",
-        {"request": request, "staff_record": staff_record, "sel_my": sel_my},
+        "staff_schedule/edit_staff_record.html", context
     )
 
 

@@ -1,7 +1,7 @@
 {% extends "shared/base.html" %}
 
 {% block title %}
-<title>Редактирование отделения</title>
+<title>Редактирование штатного расписания</title>
 {% endblock %}
 
 {% block content %}
@@ -16,27 +16,96 @@
     </div>
 
     <div class="row my-5">
-        <h3 class="text-center display-4">Редактирование Отделения</h3>
+        <h3 class="text-center display-4">Редактирование записи в штатном расписании</h3>
         <form method="POST">
             <div class="mb-3">
-                <input type="text" required class="form-control" name="name" value="{{division.name}}"
-                    placeholder="Название отдела здесь">
-            </div>
-            <div class="mb-3">
-                <input type="text" required placeholder="код сортировки (число)" name="sort_order"
-                    value="{{division.sort_order}}" class="form-control">
-            </div>
-            <div class="mb-3">
-                <select name="select" class="form-control">
-                    {% for item in sel_my %}
-                    <option name='qqq' value="{{item}}">{{item}}</option>
+                <label class="form-check-label" for="department_id" id="lbl_status">выбрать
+                    отдел{{staff_record.department_id}}</label>
+                <select name="department_id" required class="form-control">
+                    <option value="">--Please choose an option--</option>
+                    {% for item in depart %}
+                    <option name='department_id' value="{{item.id}}" {% if item.id==staff_record.department_id
+                        %}selected{% endif %}>
+                        {{item.name}}
+                    </option>
                     {% endfor %}
                 </select>
             </div>
-            <button type="submit" class="btn btn-primary"
-                onclick="window.location.href='/edit-division/{{division.id}}'">Submit</button>
+            <div class="mb-3">
+                <label class="form-check-label" for="division_id" id="lbl_status">выбрать
+                    отделение{{staff_record.division_id}}</label>
+                <select name="division_id" required class="form-control">
+                    <option value="">--Please choose an option--</option>
+                    {% for item in division %}
+                    <option name='division_id' equired placeholder="выберете должность" value="{{item.id}}" {% if
+                        item.id==staff_record.division_id %}selected{% endif %}>
+                        {{item.name}}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-check-label" for="position_id" id="lbl_status">выбрать
+                    должность{{staff_record.position_id}}</label>
+                <select name="position_id" required class="form-control">
+                    <option value="">--Please choose an option--</option>
+                    {% for item in position %}
+                    <option name='position_id' equired placeholder="выберете должность" value="{{item.id}}" {% if
+                        item.id==staff_record.position_id %}selected{% endif %}>
+                        {{item.name}}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <input type="text" required placeholder="коментарий к должности" name="comment"
+                    value="{{staff_record.comment}}" class="form-control">
+            </div>
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="is_archival" name="is_archival" value="FALSE"
+                    onclick="myFunc_archive()" {% if staff_record.is_archival %}checked{% endif %} />
+                <label class="form-check-label" for="is_archival" id="lbl_status_archive">архивная должность</label>
+            </div>
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="is_vacancy" name="is_vacancy" value="FALSE"
+                    onclick="myFunc_vacancy()" {% if staff_record.is_vacancy %}checked{% endif %} />
+                <label class="form-check-label" for="is_vacancy" id="lbl_status_vacancy">вакантная должность</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </div>
 </div>
+
+<script type="text/javascript">
+    function myFunc_archive() {
+        const chbox_archive = document.getElementById("is_archival");
+        const lbl_status_archive = document.getElementById("lbl_status_archive");
+        chbox_archive.addEventListener('change', function () {
+            if (!chbox_archive.checked) {
+                chbox_archive.value = "FALSE";
+                lbl_status_archive.textContent = "архивная должность";
+            }
+            else {
+                chbox_archive.value = "TRUE";
+                lbl_status_archive.textContent = "действующая должность";
+            }
+        }, { once: true });
+    };
+
+    function myFunc_vacancy() {
+        const chbox_vacancy = document.getElementById("is_vacancy");
+        const lbl_status_vacancy = document.getElementById("lbl_status_vacancy");
+        chbox_vacancy.addEventListener('change', function (event) {
+            if (!chbox_vacancy.checked) {
+                chbox_vacancy.value = "FALSE";
+                lbl_status_vacancy.textContent = "вакантная должность";
+            }
+            else {
+                chbox_vacancy.value = "TRUE";
+                lbl_status_vacancy.textContent = "должность занята";
+            }
+        }, { once: true });
+    };
+</script>
 
 {% endblock %}

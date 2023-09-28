@@ -52,5 +52,5 @@ class SQLStaffSchedule:
 
         result = await _session.execute(raw_sql)
         await _session.commit()
-        rez = result.fetchall()
-        return rez
+        result = result.fetchall()
+        return result
